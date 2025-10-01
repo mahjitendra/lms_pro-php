@@ -1,0 +1,9 @@
+/vendor/
+.env
+/storage/logs/*.log
+/storage/cache/
+/storage/framework/
+/public/uploads/
+/node_modules/
+npm-debug.log
+yarn-error.log
