@@ -1,9 +1,129 @@
-/vendor/
+# Environment files
 .env
-/storage/logs/*.log
-/storage/cache/
-/storage/framework/
-/public/uploads/
+.env.local
+.env.production
+
+# Vendor directories
+/vendor/
 /node_modules/
-npm-debug.log
-yarn-error.log
+
+# Storage directories
+/storage/logs/*.log
+/storage/cache/*
+/storage/sessions/*
+/storage/uploads/*
+/storage/ai-models/trained/*
+/storage/ai-models/checkpoints/*
+!/storage/logs/.gitkeep
+!/storage/cache/.gitkeep
+!/storage/sessions/.gitkeep
+!/storage/uploads/.gitkeep
+
+# Public uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Composer
+composer.phar
+composer.lock
+
+# NPM
+package-lock.json
+yarn.lock
+
+# Build files
+/public/css/app.css
+/public/js/app.js
+/public/mix-manifest.json
+
+# Testing
+/coverage/
+.phpunit.result.cache
+
+# Backup files
+*.sql
+*.backup
+*.bak
+
+# Temporary files
+*.tmp
+*.temp
+
+# AI/ML specific
+*.pkl
+*.joblib
+*.h5
+*.pb
+*.onnx
+/datasets/
+/models/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Documentation build
+/docs/_build/
+
+# Configuration files with sensitive data
+config/database.local.php
+config/mail.local.php
+
+# Error logs
+error_log
+php_errors.log
+
+# Cache files
+.cache/
+*.cache
+
+# Compiled assets
+/public/build/
+/public/hot
+
+# Laravel Mix
+/public/css/
+/public/js/
+/public/fonts/
+
+# Webpack
+webpack-stats.json
+
+# Local development
+.vagrant/
+Homestead.json
+Homestead.yaml
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Certificates
+*.pem
+*.crt
+*.key
+
+# API documentation
+/public/docs/api/
+
+# Backup directories
+/backups/
+
+# Maintenance mode
+/storage/framework/maintenance.php
