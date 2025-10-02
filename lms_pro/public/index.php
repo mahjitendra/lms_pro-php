@@ -1,23 +1,104 @@
 <?php
 
-// Define the root path of the application
-define('LMS_PRO_ROOT', dirname(__DIR__));
+/**
+ * Application Entry Point
+ * LMS Pro - Learning Management System
+ */
 
-// Load the bootstrap file to initialize the application
-require LMS_PRO_ROOT . '/lms_pro/core/bootstrap.php';
+// Define base path constant
+define('BASEPATH', true);
 
-use LmsPro\Core\Router;
-use LmsPro\Core\Request;
+// Start output buffering
+ob_start();
 
-// Load the defined routes and direct the request to the appropriate controller
-try {
-    Router::load(LMS_PRO_ROOT . '/lms_pro/app/routes.php')
-        ->direct(Request::uri(), Request::method());
-} catch (Exception $e) {
-    // In a real application, you would have a more sophisticated error handler
-    // that logs the error and shows a user-friendly error page.
-    // For now, we will just display the exception message for debugging.
-    http_response_code(500);
-    echo '<h1>Application Error</h1>';
-    echo '<p>' . $e->getMessage() . '</p>';
+// Set error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Set default timezone
+date_default_timezone_set('UTC');
+
+// Include autoloader (if using Composer)
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
 }
+
+// Include core files
+require_once __DIR__ . '/../app/core/App.php';
+require_once __DIR__ . '/../app/core/Database.php';
+require_once __DIR__ . '/../app/core/Controller.php';
+require_once __DIR__ . '/../app/core/Model.php';
+require_once __DIR__ . '/../app/core/View.php';
+require_once __DIR__ . '/../app/core/Router.php';
+require_once __DIR__ . '/../app/core/Session.php';
+require_once __DIR__ . '/../app/core/Request.php';
+require_once __DIR__ . '/../app/core/Response.php';
+require_once __DIR__ . '/../app/core/Validator.php';
+require_once __DIR__ . '/../app/core/Auth.php';
+require_once __DIR__ . '/../app/core/Helper.php';
+
+// Include middleware files
+$middlewareFiles = glob(__DIR__ . '/../app/middleware/*.php');
+foreach ($middlewareFiles as $file) {
+    require_once $file;
+}
+
+// Include helper files
+$helperFiles = glob(__DIR__ . '/../app/helpers/*.php');
+foreach ($helperFiles as $file) {
+    require_once $file;
+}
+
+// Include trait files
+$traitFiles = glob(__DIR__ . '/../app/traits/*.php');
+foreach ($traitFiles as $file) {
+    require_once $file;
+}
+
+try {
+    // Initialize and run the application
+    $app = App::getInstance();
+    
+    // Handle remember me login
+    $auth = $app->get('auth');
+    if (!$auth->check()) {
+        $auth->viaRemember();
+    }
+    
+    // Run the application
+    $app->run();
+    
+} catch (Exception $e) {
+    // Handle uncaught exceptions
+    http_response_code(500);
+    
+    if (defined('APP_DEBUG') && APP_DEBUG) {
+        echo "<h1>Application Error</h1>";
+        echo "<p><strong>Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+        echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . "</p>";
+        echo "<p><strong>Line:</strong> " . $e->getLine() . "</p>";
+        echo "<h3>Stack Trace:</h3>";
+        echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    } else {
+        echo "<h1>500 - Internal Server Error</h1>";
+        echo "<p>Something went wrong. Please try again later.</p>";
+    }
+    
+    // Log the error
+    $logFile = __DIR__ . '/../storage/logs/error.log';
+    $message = sprintf(
+        "[%s] %s in %s:%d\nStack trace:\n%s\n\n",
+        date('Y-m-d H:i:s'),
+        $e->getMessage(),
+        $e->getFile(),
+        $e->getLine(),
+        $e->getTraceAsString()
+    );
+    
+    if (is_dir(dirname($logFile))) {
+        file_put_contents($logFile, $message, FILE_APPEND | LOCK_EX);
+    }
+}
+
+// End output buffering and send response
+ob_end_flush();

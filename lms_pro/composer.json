@@ -1,30 +1,98 @@
 {
-    "name": "lms/pro",
-    "description": "A comprehensive Learning Management System with AI features.",
+    "name": "lms-pro/learning-management-system",
+    "description": "Advanced Learning Management System with AI/ML Integration",
     "type": "project",
+    "keywords": ["lms", "learning", "education", "ai", "machine-learning", "php"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Jules",
-            "email": "jules@example.com"
+            "name": "LMS Pro Team",
+            "email": "team@lmspro.com"
         }
     ],
     "require": {
-        "php": "^8.1",
-        "vlucas/phpdotenv": "^5.5"
+        "php": "^7.4|^8.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-tokenizer": "*",
+        "ext-xml": "*",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-zip": "*",
+        "phpmailer/phpmailer": "^6.6",
+        "stripe/stripe-php": "^8.0",
+        "paypal/rest-api-sdk-php": "^1.14",
+        "razorpay/razorpay": "^2.8",
+        "firebase/php-jwt": "^6.3",
+        "league/csv": "^9.8",
+        "intervention/image": "^2.7",
+        "dompdf/dompdf": "^2.0",
+        "phpoffice/phpspreadsheet": "^1.24",
+        "vlucas/phpdotenv": "^5.4",
+        "monolog/monolog": "^2.8",
+        "guzzlehttp/guzzle": "^7.4",
+        "ramsey/uuid": "^4.5",
+        "nesbot/carbon": "^2.62",
+        "league/flysystem": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "aws/aws-sdk-php": "^3.0",
+        "google/cloud-storage": "^1.0",
+        "pusher/pusher-php-server": "^7.2",
+        "ratchet/pawl": "^0.4",
+        "textalk/websocket-client": "^1.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "mockery/mockery": "^1.4",
+        "fakerphp/faker": "^1.20",
+        "phpstan/phpstan": "^1.8",
+        "squizlabs/php_codesniffer": "^3.7",
+        "friendsofphp/php-cs-fixer": "^3.11"
     },
     "autoload": {
         "psr-4": {
-            "LmsPro\\": "lms_pro/"
+            "App\\": "app/",
+            "Database\\": "database/"
         },
         "files": [
-            "lms_pro/core/helpers.php"
+            "app/helpers/functions.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php scripts/install.php"
+        ],
+        "post-update-cmd": [
+            "@php scripts/install.php"
+        ],
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "analyse": "phpstan analyse",
+        "cs-check": "phpcs",
+        "cs-fix": "php-cs-fixer fix",
+        "migrate": "@php scripts/migrate.php",
+        "seed": "@php scripts/seed.php",
+        "serve": "php -S localhost:8000 -t public"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
